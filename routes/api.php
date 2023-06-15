@@ -19,25 +19,19 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('companhias-aereas')->group(function () {
-    Route::get(
-        '/',
-        [CompanyController::class, 'index']
-    );
-    Route::get(
-        '/{id}',
-        [CompanyController::class, 'show']
-    );
-    Route::post(
-        '/',
-        [CompanyController::class, 'store']
-    );
-    Route::put(
-        '/{id}',
-        [CompanyController::class, 'update']
-    );
-    Route::delete(
-        '/{id}',
-        [CompanyController::class, 'destroy']
-    );
+// Rota para a documentação da API
+Route::get('/documentacao', function () {
+    return view('documentacao');
+});
+
+//Rota de login
+Route::post('/auth/login', [CompanyController::class, 'login'])->name('login');
+
+//Rotas de companhias aéreas
+Route::prefix('companhias-aereas')->middleware('jwt.auth')->group(function () {
+    Route::get('/', [CompanyController::class, 'index']);
+    Route::get('/{id}', [CompanyController::class, 'show']);
+    Route::post('/', [CompanyController::class, 'store']);
+    Route::put('/{id}', [CompanyController::class, 'update']);
+    Route::delete('/{id}', [CompanyController::class, 'destroy']);
 });

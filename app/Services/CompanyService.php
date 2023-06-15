@@ -7,15 +7,17 @@ use App\Repositories\CompanyRepository;
 class CompanyService
 {
     protected $companyRepository;
+    protected $authService;
 
     /**
      * Construtor da classe.
      *
      * @param \App\Repositories\CompanyRepository $companyRepository
      */
-    public function __construct(CompanyRepository $companyRepository)
+    public function __construct(CompanyRepository $companyRepository, UserAuthService $authService)
     {
         $this->companyRepository = $companyRepository;
+        $this->authService       = $authService;
     }
 
     /**

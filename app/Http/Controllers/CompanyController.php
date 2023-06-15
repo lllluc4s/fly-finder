@@ -2,27 +2,53 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Services\CompanyService;
+use App\Services\UserAuthService;
 
 class CompanyController extends Controller
 {
     protected $companyService;
+    protected $userAuthService;
 
     /**
      * Construtor da classe.
      *
      * @param \App\Services\CompanyService $company
+     * @param \App\Services\UserAuthService $userAuthService
      */
-    public function __construct(CompanyService $company)
+    public function __construct(CompanyService $company, UserAuthService $userAuthService)
     {
-        $this->companyService = $company;
+        $this->companyService  = $company;
+        $this->userAuthService = $userAuthService;
     }
 
     /**
-     * Lista todas as companhias aéreas cadastradas.
+     * Autentica um usuário e retorna um token JWT.
+     *
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
+    public function login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
+
+        $result = $this->userAuthService->login($credentials);
+
+        if (isset($result['errors'])) {
+            return response()->json(['errors' => $result['errors']], 422);
+        }
+
+        return response()->json(['token' => $result['token']]);
+    }
+
+
+    /**
+         * Lista todas as companhias aéreas cadastradas.
+         *
+         * @return \Illuminate\Http\Response
+         */
     public function index()
     {
         $companies = $this->companyService->index();

@@ -4,9 +4,11 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use App\Repositories\CompanyRepository;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class CompanyFeatureTest extends TestCase
 {
+    protected $token;
     protected $companyRepository;
     protected $company;
 
@@ -17,6 +19,10 @@ class CompanyFeatureTest extends TestCase
     {
         parent::setUp();
 
+        $this->token = JWTAuth::attempt([
+            'email'    => 'admin@admin.com',
+            'password' => 'admin',
+        ]);
         $this->companyRepository = app(CompanyRepository::class);
         $this->company           = $this->companyRepository->create([
             'name'    => 'Teste',
@@ -30,7 +36,9 @@ class CompanyFeatureTest extends TestCase
          */
     public function test_get_route_companies(): void
     {
-        $this->get('/api/companhias-aereas')
+        $this->get('/api/companhias-aereas', [
+            'Authorization' => 'Bearer ' . $this->token,
+        ])
             ->assertStatus(200);
     }
 
@@ -39,7 +47,9 @@ class CompanyFeatureTest extends TestCase
      */
     public function test_route_companies_id(): void
     {
-        $this->get('/api/companhias-aereas/' . $this->company->id)
+        $this->get('/api/companhias-aereas/' . $this->company->id, [
+            'Authorization' => 'Bearer ' . $this->token,
+        ])
             ->assertStatus(200);
     }
 
@@ -48,14 +58,22 @@ class CompanyFeatureTest extends TestCase
      */
     public function test_route_companies_put(): void
     {
-        $this->post('/api/companhias-aereas', $this->company->toArray())
+        $this->post('/api/companhias-aereas', $this->company->toArray(), [
+            'Authorization' => 'Bearer ' . $this->token,
+        ])
             ->assertStatus(201);
 
-        $this->put('/api/companhias-aereas/' . $this->company->id, [
-            'name'    => 'Teste',
-            'local'   => $this->company->local,
-            'website' => $this->company->website,
-        ])
+        $this->put(
+            '/api/companhias-aereas/' . $this->company->id,
+            [
+                'name'    => 'Teste',
+                'local'   => $this->company->local,
+                'website' => $this->company->website,
+            ],
+            [
+                'Authorization' => 'Bearer ' . $this->token,
+            ]
+        )
             ->assertStatus(200);
     }
 
@@ -64,7 +82,9 @@ class CompanyFeatureTest extends TestCase
      */
     public function test_route_companies_delete(): void
     {
-        $this->delete('/api/companhias-aereas/' . $this->company->id)
+        $this->delete('/api/companhias-aereas/' . $this->company->id, [], [
+            'Authorization' => 'Bearer ' . $this->token,
+        ])
             ->assertStatus(200);
     }
 }
