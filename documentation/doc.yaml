@@ -1,0 +1,251 @@
+openapi: 3.0.0
+info:
+  title: API da FlyFinder
+  version: "1.0"
+  description: |
+    Esta é a documentação da API FlyFinder. Aqui você encontrará todas as informações de como utilizar a API.
+    ## Authentication
+    Esta API utiliza JWT para autenticação. Para obter o token, é necessário fazer uma requisição para o endpoint de login.
+    ```http
+servers:
+  - url: http://localhost:8000/api
+    description: "Servidor local"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  headers:
+    Authorization:
+      description: Bearer token
+      schema:
+        type: string
+        format: JWT
+    Accept:
+      description: Accept header
+      schema:
+        type: string
+        format: application/json
+    Content-Type:
+      description: Content-Type header
+      schema:
+        type: string
+        format: application/json
+paths:
+  /auth/login:
+    post:
+      summary: Login
+      description: Gera um token de acesso para o usuário.
+      operationId: login
+      tags:
+        - AUTH
+      requestBody:
+        description: Este endpoint recebe os dados de login do usuário.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: Email
+                  example: admin@admin.com
+                password:
+                  type: string
+                  description: Password
+                  example: admin
+              required:
+                - email
+                - password
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: Access token
+                    example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0Ojg5ODcvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE2Nzg4OTY5ODgsImV4cCI6MTY3ODkwMDU4OCwibmJmIjoxNjc4ODk2OTg4LCJqdGkiOiJnaGhYSHFaS2JzNGdJRnJIIiwic3ViIjoiMSIsInBydiI6IjFkMGEwMjBhY2Y1YzRiNmM0OTc5ODlkZjFhYmYwZmJkNGU4YzhkNjMiLCJjdXN0b21lciI6eyJ1dWlkIjoiMzhlMTk0NDAtZjg3Ny00Y2IxLWEyOWItODZiOGYxMjU5ZDBhIiwibmFtZSI6IkF1Z3VzdHVzIEt1aGxtYW4iLCJlbWFpbCI6ImRhbmlhbC5jcnVpY2tzaGFua0BiZWNodGVsYXIuaW5mbyIsImRvY3VtZW50IjoiODQ3MTU4NTM5MDMiLCJwaG9uZSI6IjcxOS45NzcuNDc3MSIsImJpcnRoX2F0IjoiMTk5OC0wNC0zMCIsImdlbnJlIjozfX0.752x6yVjIc1rj8ZYsyXZ_glELEsW9-tezTDPKY-vVcA
+        "422":
+          description: Unprocessable Content
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: string
+                    description: Errors
+                    example: Credenciais inválidas
+
+  /companhias-aereas:
+    get:
+      summary: lista todas as companhias aéreas
+      description: Retorna todas as companhias aéreas cadastradas no sistema.
+      operationId: getCompanhiasAereas
+      tags:
+        - COMPANHIAS_AEREAS
+      security:
+        - bearerAuth: []
+          require:
+            - bearerAuth
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+        "500":
+          description: Internal server error
+    post:
+      summary: Cria uma nova companhia aérea
+      description: Cria uma nova companhia aérea no sistema.
+      operationId: createCompanhiaAerea
+      tags:
+        - COMPANHIAS_AEREAS
+      security:
+        - bearerAuth: []
+          require:
+            - bearerAuth
+      requestBody:
+        description: Este endpoint recebe os dados da companhia aérea.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Nome da companhia aérea
+                  example: Gol Linhas Aéreas
+                local:
+                  type: string
+                  description: Local da companhia aérea
+                  example: São Paulo, Brasil
+                website:
+                  type: string
+                  description: Website da companhia aérea
+                  example: http://www.gol.com.br
+              required:
+                - name
+                - local
+                - website
+      responses:
+        "201":
+          description: Created
+        "401":
+          description: Unauthorized
+        "422":
+          description: Unprocessable Content
+        "500":
+          description: Internal server error
+
+  /companhias-aereas/{companhiaAereaId}:
+    get:
+      summary: Retorna uma companhia aérea específica
+      description: Retorna uma companhia aérea específica cadastrada no sistema.
+      operationId: getCompanhiaAerea
+      tags:
+        - COMPANHIAS_AEREAS
+      security:
+        - bearerAuth: []
+          require:
+            - bearerAuth
+      parameters:
+        - name: companhiaAereaId
+          in: path
+          description: ID da companhia aérea
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal server error
+    put:
+      summary: Atualiza uma companhia aérea específica
+      description: Atualiza uma companhia aérea específica cadastrada no sistema.
+      operationId: updateCompanhiaAerea
+      tags:
+        - COMPANHIAS_AEREAS
+      security:
+        - bearerAuth: []
+          require:
+            - bearerAuth
+      parameters:
+        - name: companhiaAereaId
+          in: path
+          description: ID da companhia aérea
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Este endpoint recebe os dados da companhia aérea.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Nome da companhia aérea
+                  example: Gol Linhas Aéreas
+                local:
+                  type: string
+                  description: Local da companhia aérea
+                  example: São Paulo, Brasil
+                website:
+                  type: string
+                  description: Website da companhia aérea
+                  example: http://www.gol.com.br
+      responses:
+        "200":
+          description: OK
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "422":
+          description: Unprocessable Content
+        "500":
+          description: Internal server error
+    delete:
+      summary: Deleta uma companhia aérea específica
+      description: Deleta uma companhia aérea específica cadastrada no sistema.
+      operationId: deleteCompanhiaAerea
+      tags:
+        - COMPANHIAS_AEREAS
+      security:
+        - bearerAuth: []
+          require:
+            - bearerAuth
+      parameters:
+        - name: companhiaAereaId
+          in: path
+          description: ID da companhia aérea
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          description: No Content
+        "401":
+          description: Unauthorized
+        "404":
+          description: Not Found
+        "500":
+          description: Internal server error

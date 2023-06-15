@@ -19,11 +19,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Rota para a documentação da API
-Route::get('/documentacao', function () {
-    return view('documentacao');
-});
-
 //Rota de login
 Route::post('/auth/login', [CompanyController::class, 'login'])->name('login');
 
