@@ -54,7 +54,7 @@ paths:
                   example: admin@admin.com
                 password:
                   type: string
-                  description: Password
+                  description: Senha
                   example: admin
               required:
                 - email
@@ -69,7 +69,7 @@ paths:
                 properties:
                   token:
                     type: string
-                    description: Access token
+                    description: Token de acesso
                     example: eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0Ojg5ODcvYXBpL2F1dGgvbG9naW4iLCJpYXQiOjE2Nzg4OTY5ODgsImV4cCI6MTY3ODkwMDU4OCwibmJmIjoxNjc4ODk2OTg4LCJqdGkiOiJnaGhYSHFaS2JzNGdJRnJIIiwic3ViIjoiMSIsInBydiI6IjFkMGEwMjBhY2Y1YzRiNmM0OTc5ODlkZjFhYmYwZmJkNGU4YzhkNjMiLCJjdXN0b21lciI6eyJ1dWlkIjoiMzhlMTk0NDAtZjg3Ny00Y2IxLWEyOWItODZiOGYxMjU5ZDBhIiwibmFtZSI6IkF1Z3VzdHVzIEt1aGxtYW4iLCJlbWFpbCI6ImRhbmlhbC5jcnVpY2tzaGFua0BiZWNodGVsYXIuaW5mbyIsImRvY3VtZW50IjoiODQ3MTU4NTM5MDMiLCJwaG9uZSI6IjcxOS45NzcuNDc3MSIsImJpcnRoX2F0IjoiMTk5OC0wNC0zMCIsImdlbnJlIjozfX0.752x6yVjIc1rj8ZYsyXZ_glELEsW9-tezTDPKY-vVcA
         "422":
           description: Unprocessable Content
