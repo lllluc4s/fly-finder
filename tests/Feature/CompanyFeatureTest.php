@@ -3,11 +3,14 @@
 namespace Tests\Feature;
 
 use Tests\TestCase;
-use App\Repositories\CompanyRepository;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use App\Repositories\CompanyRepository;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class CompanyFeatureTest extends TestCase
 {
+    use DatabaseTransactions;
+
     protected $token;
     protected $companyRepository;
     protected $company;
@@ -50,7 +53,16 @@ class CompanyFeatureTest extends TestCase
         $this->get('/api/companhias-aereas/' . $this->company->id, [
             'Authorization' => 'Bearer ' . $this->token,
         ])
-            ->assertStatus(200);
+            ->assertStatus(200)
+            ->assertJsonStructure([
+                'headers'  => [],
+                'original' => [
+                    'name',
+                    'local',
+                    'website',
+                ],
+                'exception' => [],
+            ]);
     }
 
     /**
